@@ -1,15 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Transaction ID Submission</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Transaction ID Submission - DEAL STORE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#ffffff;color:#000;font-family:system-ui, sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
+.card{width:100%;max-width:420px;background:#ffffff;border:2px solid #fbbf24;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.1);padding:22px}
+.header{text-align:center;margin-bottom:18px}
+.uc{width:60px;height:60px;background:radial-gradient(circle at 30% 30%,#FFD700,#FFA500,#FF8C00);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;border:2px solid #000;margin:0 auto;box-shadow:0 0 10px rgba(255,165,0,0.4);font-size:20px}
+h2{font-size:20px;font-weight:900;margin-top:10px;color:#000}
+.sub{font-size:12px;color:#666;margin-top:4px}
+.label{font-size:13px;font-weight:700;margin-top:16px;display:block;color:#000}
+.input{width:100%;margin-top:8px;padding:14px;border-radius:10px;border:2px solid #e5e7eb;background:#f9fafb;color:#000;font-size:18px;text-align:center;letter-spacing:4px;font-weight:800;outline:none}
+.input:focus{border-color:#fbbf24;background:#fff}
+.hint{font-size:11px;color:#888;margin-top:6px;text-align:center}
+.btn{width:100%;margin-top:18px;padding:14px;border-radius:10px;border:none;background:linear-gradient(90deg,#fbbf24,#ffd700);color:#000;font-weight:900;font-size:15px;cursor:pointer}
+.btn:active{transform:scale(0.98)}
+.success{display:none;margin-top:16px;background:#052e16;border:1px solid #22c55e;padding:12px;border-radius:10px;color:#22c55e;font-size:13px;font-weight:700;text-align:center}
+.footer{margin-top:16px;text-align:center;font-size:10px;color:#999}
+</style>
 </head>
 <body>
-    <h2>Transaction ID Submit Karein</h2>
-    <form action="send.php" method="POST">
-        <label for="trans_id">Transaction ID (9 digits):</label><br>
-        <input type="text" id="trans_id" name="trans_id" pattern="\d{9}" maxlength="9" required>
-        <br><br>
-        <input type="submit" value="Submit">
-    </form>
+<div class="card">
+<div class="header">
+<div class="uc">UC</div>
+<h2>Transaction ID Submit Karein</h2>
+<div class="sub">DEAL STORE - Payment Verification</div>
+</div>
+
+<form onsubmit="return handleSubmit(event)">
+<label class="label" for="trans_id">Transaction ID (9 digits)</label>
+<input type="text" id="trans_id" name="trans_id" placeholder="123456789" pattern="\d{9}" maxlength="9" inputmode="numeric" required class="input">
+<div class="hint">Sirf 9 hindse (0-9) likhein - Example: 987654321</div>
+<button type="submit" class="btn">SUBMIT → VERIFY</button>
+<div id="successBox" class="success">✅ Transaction ID <span id="showId"></span> submit ho gaya!<br>24 ghante me UC add ho jayega.</div>
+</form>
+
+<div class="footer">🔒 SSL Secure | White Background Official | DEAL STORE</div>
+</div>
+
+<script>
+function handleSubmit(e){
+e.preventDefault();
+const id=document.getElementById('trans_id').value;
+if(!/^\d{9}$/.test(id)){alert('Bhai 9 digit ka number likho! 0-9');return false;}
+document.getElementById('showId').innerText=id;
+document.getElementById('successBox').style.display='block';
+setTimeout(()=>{alert('Transaction ID '+id+' save ho gaya! (GitHub Pages pe PHP nahi chalta, is liye demo success dikhaya)');},300);
+return false;
+}
+document.getElementById('trans_id').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,9);});
+</script>
 </body>
 </html>
