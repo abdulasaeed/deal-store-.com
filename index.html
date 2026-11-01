@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Transaction ID Submission</title>
+</head>
+<body>
+    <h2>Transaction ID Submit Karein</h2>
+    <form action="send.php" method="POST">
+        <label for="trans_id">Transaction ID (9 digits):</label><br>
+        <input type="text" id="trans_id" name="trans_id" pattern="\d{9}" maxlength="9" required>
+        <br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
