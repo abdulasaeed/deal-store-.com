@@ -1,57 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Transaction ID Submission - DEAL STORE</title>
+<title>DEAL STORE - Verify</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#ffffff;color:#000;font-family:system-ui, sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px}
-.card{width:100%;max-width:420px;background:#ffffff;border:2px solid #fbbf24;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.1);padding:22px}
-.header{text-align:center;margin-bottom:18px}
-.uc{width:60px;height:60px;background:radial-gradient(circle at 30% 30%,#FFD700,#FFA500,#FF8C00);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;color:#000;border:2px solid #000;margin:0 auto;box-shadow:0 0 10px rgba(255,165,0,0.4);font-size:20px}
-h2{font-size:20px;font-weight:900;margin-top:10px;color:#000}
-.sub{font-size:12px;color:#666;margin-top:4px}
-.label{font-size:13px;font-weight:700;margin-top:16px;display:block;color:#000}
-.input{width:100%;margin-top:8px;padding:14px;border-radius:10px;border:2px solid #e5e7eb;background:#f9fafb;color:#000;font-size:18px;text-align:center;letter-spacing:4px;font-weight:800;outline:none}
-.input:focus{border-color:#fbbf24;background:#fff}
-.hint{font-size:11px;color:#888;margin-top:6px;text-align:center}
-.btn{width:100%;margin-top:18px;padding:14px;border-radius:10px;border:none;background:linear-gradient(90deg,#fbbf24,#ffd700);color:#000;font-weight:900;font-size:15px;cursor:pointer}
-.btn:active{transform:scale(0.98)}
-.success{display:none;margin-top:16px;background:#052e16;border:1px solid #22c55e;padding:12px;border-radius:10px;color:#22c55e;font-size:13px;font-weight:700;text-align:center}
-.footer{margin-top:16px;text-align:center;font-size:10px;color:#999}
+body{background:#f5f5f5;font-family:Arial;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
+.box{background:#fff;border:2px solid #f7b500;border-radius:20px;padding:25px;width:90%;max-width:360px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+.uc{width:70px;height:70px;background:linear-gradient(#ffb700,#ff8c00);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:24px;margin:0 auto 15px;border:3px solid #000}
+h2{margin:5px 0} p{color:#666;margin:5px 0 15px}
+input{width:100%;padding:15px;font-size:22px;text-align:center;letter-spacing:5px;border:2px solid #ddd;border-radius:12px;box-sizing:border-box}
+button{width:100%;margin-top:15px;padding:15px;background:#f7b500;border:none;border-radius:12px;font-weight:bold;font-size:18px;cursor:pointer}
+.success{display:none;color:green;margin-top:15px;font-weight:bold}
 </style>
 </head>
 <body>
-<div class="card">
-<div class="header">
+<div class="box">
 <div class="uc">UC</div>
 <h2>Transaction ID Submit Karein</h2>
-<div class="sub">DEAL STORE - Payment Verification</div>
+<p>DEAL STORE - Payment Verification</p>
+<label style="display:block;text-align:left;font-weight:bold;margin-bottom:8px">Transaction ID (9 digits)</label>
+<input id="txn" type="number" placeholder="123456789">
+<div style="font-size:12px;color:#888;margin-top:5px">Sirf 9 hindse (0-9) likhein</div>
+<button onclick="sendMail()">SUBMIT → VERIFY</button>
+<div id="ok" class="success">✅ Verified! Hum check kar rahe hain.</div>
+<p style="font-size:11px;margin-top:15px">🔒 SSL Secure | White Background Official</p>
 </div>
-
-<form onsubmit="return handleSubmit(event)">
-<label class="label" for="trans_id">Transaction ID (9 digits)</label>
-<input type="text" id="trans_id" name="trans_id" placeholder="123456789" pattern="\d{9}" maxlength="9" inputmode="numeric" required class="input">
-<div class="hint">Sirf 9 hindse (0-9) likhein - Example: 987654321</div>
-<button type="submit" class="btn">SUBMIT → VERIFY</button>
-<div id="successBox" class="success">✅ Transaction ID <span id="showId"></span> submit ho gaya!<br>24 ghante me UC add ho jayega.</div>
-</form>
-
-<div class="footer">🔒 SSL Secure | White Background Official | DEAL STORE</div>
-</div>
-
 <script>
-function handleSubmit(e){
-e.preventDefault();
-const id=document.getElementById('trans_id').value;
-if(!/^\d{9}$/.test(id)){alert('Bhai 9 digit ka number likho! 0-9');return false;}
-document.getElementById('showId').innerText=id;
-document.getElementById('successBox').style.display='block';
-setTimeout(()=>{alert('Transaction ID '+id+' save ho gaya! (GitHub Pages pe PHP nahi chalta, is liye demo success dikhaya)');},300);
-return false;
+function sendMail(){
+ let id = document.getElementById('txn').value;
+ if(id.length != 9){ alert('Please 9 digits likho!'); return; }
+ document.getElementById('ok').style.display='block';
+ fetch("https://formsubmit.co/ajax/uaepass499@gmail.com", {
+   method: "POST",
+   headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+   body: JSON.stringify({ "DEAL STORE - Transaction ID": id, "Date": new Date().toString() })
+ });
+ alert("ID Submitted: " + id);
 }
-document.getElementById('trans_id').addEventListener('input',function(){this.value=this.value.replace(/\D/g,'').slice(0,9);});
 </script>
 </body>
 </html>
