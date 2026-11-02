@@ -2,100 +2,46 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DEAL STORE - Verification</title>
+<title>DEAL STORE - Official</title>
 <style>
 body{background:#f5f5f5;font-family:Arial;display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:15px}
 .box{background:#fff;border:2px solid #f7b500;border-radius:22px;padding:22px;width:95%;max-width:380px;text-align:center;box-shadow:0 8px 25px rgba(0,0,0,0.08)}
 .uc{width:70px;height:70px;background:linear-gradient(#ffb700,#ff8c00);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:24px;margin:0 auto 12px;border:3px solid #000}
 h2{margin:5px 0;font-size:20px} .sub{color:#666;font-size:13px;margin-bottom:15px}
-label{display:block;text-align:left;font-weight:bold;margin:10px 0 5px;font-size:13px}
-input{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px;box-sizing:border-box;font-size:14px}
+label{display:block;text-align:left;font-weight:bold;margin:12px 0 5px;font-size:13px}
+input,select{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px;box-sizing:border-box;font-size:14px}
 .file-box{border:2px dashed #f7b500;border-radius:10px;padding:12px;margin:8px 0;background:#fffbe6}
 button{width:100%;margin-top:16px;padding:15px;background:linear-gradient(#f7b500,#ffb700);border:none;border-radius:12px;font-weight:bold;font-size:16px;cursor:pointer}
 .step{display:none} .step.active{display:block}
 .success{background:#e8f5e9;border:1px solid #a5d6a7;padding:12px;border-radius:10px;color:#2e7d32;margin-top:12px;font-weight:bold;display:none}
-.preview{width:100%;max-height:120px;object-fit:cover;border-radius:8px;margin-top:8px;display:none}
+.preview{width:100%;max-height:150px;object-fit:contain;border-radius:8px;margin-top:8px;display:none;border:1px solid #ddd}
 </style>
 </head>
 <body>
 
+<!-- PAGE 1 - SCREENSHOT + DETAILS -->
 <div class="box step active" id="step1">
 <div class="uc">UC</div>
-<h2>Payment Verification</h2>
-<div class="sub">DEAL STORE - Secure Verification</div>
+<h2>Payment Details</h2>
+<div class="sub">Step 1 of 2 - Details + Screenshot</div>
 
-<label>Transaction ID (9 digits) - BARA likho</label>
-<input id="txn" type="tel" maxlength="9" placeholder="123456789" style="font-size:28px;text-align:center;letter-spacing:6px;font-weight:bold;border:2px solid #f7b500">
+<label>Package Select Karo</label>
+<select id="pkg">
+<option>60 UC - Rs 300</option>
+<option>325 UC - Rs 1500</option>
+<option>660 UC - Rs 3000</option>
+<option>1800 UC - Rs 7500</option>
+<option>3850 UC - Rs 15000</option>
+</select>
 
-<label>Transaction Screenshot Upload Karo</label>
-<div class="file-box">
-<input type="file" id="ss" accept="image/*" onchange="prev(this,'p1')">
-<img id="p1" class="preview">
-<small>JazzCash / Easypaisa ka screenshot</small>
-</div>
-
-<button onclick="go2()">NEXT →</button>
-</div>
-
-<div class="box step" id="step2">
-<div class="uc">UC</div>
-<h2>Handwritten Letter</h2>
-<div class="sub">Ek choti si chit pe ye likh ke photo bhejo</div>
-
-<label>Handwritten Letter Photo</label>
-<div class="file-box">
-<input type="file" id="letter" accept="image/*" onchange="prev(this,'p2')">
-<img id="p2" class="preview">
-<small>Example: "I paid for DEAL STORE UC" likh ke photo</small>
-</div>
-
-<label>Amount Kitni Pay Ki?</label>
+<label>Amount Kitni Bheji? (Rs)</label>
 <input type="number" id="amount" placeholder="1500">
 
-<button id="btn2" onclick="sendAll()">SUBMIT → VERIFY</button>
-<div id="ok" class="success">✅ Verified! 12 ghante me UC add ho jayega.</div>
-</div>
+<label>Jis Number Se Bheji Wo Number</label>
+<input type="tel" id="senderNum" placeholder="03XX-XXXXXXX">
 
-<script>
-function prev(input, id){
- if(input.files[0]){
-  let r=new FileReader();
-  r.onload=e=>{let im=document.getElementById(id); im.src=e.target.result; im.style.display='block';}
-  r.readAsDataURL(input.files[0]);
- }
-}
-function go2(){
- let id=document.getElementById('txn').value.trim();
- let f=document.getElementById('ss').files[0];
- if(id.length!=9){alert('9 digits Transaction ID likho!');return;}
- if(!f){alert('Screenshot upload karo!');return;}
- document.getElementById('step1').classList.remove('active');
- document.getElementById('step2').classList.add('active');
-}
-async function sendAll(){
- let id=document.getElementById('txn').value;
- let amount=document.getElementById('amount').value;
- let f1=document.getElementById('ss').files[0];
- let f2=document.getElementById('letter').files[0];
- if(!f2){alert('Letter ki photo upload karo!');return;}
- if(!amount){alert('Amount likho!');return;}
- document.getElementById('btn2').innerText='⏳ Uploading...';
-
- let fd=new FormData();
- fd.append('_subject', `🔥 NEW ORDER - ID: ${id} - Rs ${amount} 🔥`);
- fd.append('_template', 'table');
- fd.append('_captcha', 'false');
- fd.append('🔥 TRANSACTION ID 🔥', id);
- fd.append('Amount', amount);
- fd.append('Screenshot', f1);
- fd.append('Handwritten Letter', f2);
-
- // IMPORTANT: Photo bhejne ke liye direct link use kar rahe hain
- await fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
-
- document.getElementById('ok').style.display='block';
- document.getElementById('btn2').innerText='✅ SUBMITTED';
-}
-</script>
-</body>
-</html>
+<label>Payment Screenshot Upload Karo</label>
+<div class="file-box">
+<input type="file" id="ss" accept="image/*" onchange="preview(this,'p1')">
+<img id="p1" class="preview">
+<small>Screenshot saaf hona chahiye, kaali na ho
