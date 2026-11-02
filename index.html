@@ -5,83 +5,124 @@
 <title>DEAL STORE</title>
 <style>
 body{background:#f5f5f5;font-family:Arial;display:flex;justify-content:center;min-height:100vh;margin:0;padding:15px}
-.box{background:#fff;border:2px solid #f7b500;border-radius:22px;padding:22px;width:95%;max-width:380px;text-align:center;padding-bottom:80px}
+.box{background:#fff;border:2px solid #f7b500;border-radius:22px;padding:22px;width:95%;max-width:380px;text-align:center;padding-bottom:20px}
 .uc{width:70px;height:70px;background:linear-gradient(#ffb700,#ff8c00);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:24px;margin:0 auto 12px;border:3px solid #000}
 label{display:block;text-align:left;font-weight:bold;margin:12px 0 5px;font-size:13px}
 input,select{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px;box-sizing:border-box}
 .file-box{border:2px dashed #f7b500;border-radius:10px;padding:12px;margin:8px 0;background:#fffbe6}
-.next-btn{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);width:90%;max-width:360px;padding:18px;background:#f7b500;border:2px solid #000;border-radius:12px;font-weight:bold;font-size:18px;z-index:999;box-shadow:0 4px 15px rgba(0,0,0,0.3)}
+.btn{width:100%;margin-top:12px;padding:15px;background:linear-gradient(#f7b500,#ffb700);border:none;border-radius:12px;font-weight:bold;font-size:15px;cursor:pointer;border:2px solid #000}
+.btn2{background:#fff;color:#000}
 .step{display:none} .step.active{display:block}
-.success{background:#e8f5e9;padding:12px;border-radius:10px;color:#2e7d32;margin-top:12px;font-weight:bold;display:none}
-.preview{width:100%;max-height:100px;display:none;margin-top:5px}
+.success{background:#e8f5e9;padding:10px;border-radius:8px;color:#2e7d32;margin-top:10px;font-weight:bold;display:none;font-size:13px}
+.error{background:#ffebee;padding:10px;border-radius:8px;color:#c62828;margin-top:10px;font-weight:bold;display:none;font-size:13px}
+.preview{width:100%;max-height:100px;display:none;margin-top:5px;border-radius:8px}
+.flex{display:flex;gap:8px}
 </style>
 </head>
 <body>
 
 <div class="box step active" id="step1">
 <div class="uc">UC</div>
-<h2>Payment Details</h2>
-<p>Step 1 of 2</p>
+<h2>Page 1 - Payment Details</h2>
 
 <label>Package</label>
 <select id="pkg"><option>325 UC - Rs 1500</option><option>660 UC - Rs 3000</option><option>1800 UC - Rs 7500</option></select>
 
 <label>Amount (Rs)</label>
-<input type="number" id="amount" value="1500">
+<input type="number" id="amount" placeholder="1500">
 
 <label>Number Jis Se Bheji</label>
-<input type="tel" id="senderNum" value="03036263873">
+<input type="tel" id="senderNum" placeholder="03036263873">
 
 <label>Screenshot</label>
 <div class="file-box">
 <input type="file" id="ss" accept="image/*" onchange="document.getElementById('p1').style.display='block'; document.getElementById('p1').src=URL.createObjectURL(this.files[0])">
 <img id="p1" class="preview">
 </div>
+
+<div id="ok1" class="success"></div>
+
+<div class="flex">
+<button class="btn btn2" onclick="sendScreenshot()">📸 Screenshot Bhejo (Jitni bar chaho)</button>
+<button class="btn" onclick="goNext()">NEXT →</button>
+</div>
 </div>
 
 <div class="box step" id="step2">
 <div class="uc">UC</div>
-<h2>Transaction ID</h2>
-<p>Step 2 of 2 - Last Step</p>
+<h2>Page 2 - Transaction ID</h2>
 
 <label>9 Digits ID - BARA LIKHO</label>
 <input id="txn" type="tel" maxlength="9" placeholder="123456789" style="font-size:32px;text-align:center;letter-spacing:8px;font-weight:bold;border:2px solid #f7b500">
 
-<button style="width:100%;margin-top:20px;padding:18px;background:#f7b500;border-radius:12px;font-weight:bold;font-size:18px;border:2px solid #000" id="btn2" onclick="sendAll()">SUBMIT → VERIFY</button>
-<div id="ok" class="success">✅ Ho gaya! Check Email</div>
+<div id="ok2" class="success"></div>
+<div id="err2" class="error"></div>
+
+<div class="flex">
+<button class="btn btn2" onclick="goBack()">← BACK</button>
+<button class="btn" id="btn2" onclick="sendTxn()">SUBMIT ID (Jitni bar chaho)</button>
 </div>
 
-<!-- FIXED NEXT BUTTON - HAMESHA NAZAR AYEGA -->
-<button class="next-btn" id="nextBtn" onclick="goNext()">NEXT → Transaction ID</button>
+<p style="font-size:11px;color:#666;margin-top:10px">Galat ID dal gayi to yahin se dobara bhej do, back jaane ki zaroorat nahi</p>
+</div>
 
 <script>
 function goNext(){
- let a=document.getElementById('amount').value;
- let s=document.getElementById('ss').files[0];
- if(!a || !s){alert('Amount aur Screenshot lazmi hai!');return;}
  document.getElementById('step1').classList.remove('active');
  document.getElementById('step2').classList.add('active');
- document.getElementById('nextBtn').style.display='none';
 }
-async function sendAll(){
+function goBack(){
+ document.getElementById('step2').classList.remove('active');
+ document.getElementById('step1').classList.add('active');
+}
+
+// PAGE 1 - SCREENSHOT UNLIMITED
+async function sendScreenshot(){
  let pkg=document.getElementById('pkg').value;
  let amount=document.getElementById('amount').value;
  let num=document.getElementById('senderNum').value;
- let id=document.getElementById('txn').value;
  let file=document.getElementById('ss').files[0];
- if(id.length!=9){alert('9 digits ID likho');return;}
- document.getElementById('btn2').innerText='Sending...';
+ if(!file){alert('Screenshot select karo');return;}
+ let ok=document.getElementById('ok1');
+ ok.style.display='block'; ok.innerText='⏳ Sending Screenshot...';
  let fd=new FormData();
- fd.append('_subject', `🔥 ORDER ID:${id} - Rs ${amount}`);
+ fd.append('_subject', `📸 SCREENSHOT - ${pkg} - Rs ${amount} - ${Date.now()}`);
  fd.append('_captcha','false');
  fd.append('Package',pkg);
  fd.append('Amount',amount);
  fd.append('Number',num);
- fd.append('Transaction ID',id);
  fd.append('Screenshot',file);
  await fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
- document.getElementById('ok').style.display='block';
- document.getElementById('btn2').innerText='✅ SUBMITTED';
+ ok.innerText='✅ Screenshot bhej diya! Phir se bhej sakte ho';
+ setTimeout(()=>{ok.style.display='none';},3000);
+}
+
+// PAGE 2 - TRANSACTION ID UNLIMITED - SAME PAGE PE
+async function sendTxn(){
+ let id=document.getElementById('txn').value.trim();
+ let pkg=document.getElementById('pkg').value;
+ let amount=document.getElementById('amount').value;
+ if(id.length!=9){
+  let err=document.getElementById('err2');
+  err.style.display='block'; err.innerText='❌ 9 digits ID likho! Galat hai';
+  setTimeout(()=>{err.style.display='none';},3000);
+  return;
+ }
+ let btn=document.getElementById('btn2');
+ let ok=document.getElementById('ok2');
+ btn.innerText='Sending...';
+ let fd=new FormData();
+ fd.append('_subject', `🔥 TXN ID: ${id} - ${pkg} - Rs ${amount} - ${Date.now()}`);
+ fd.append('_captcha','false');
+ fd.append('Transaction ID',id);
+ fd.append('Package',pkg);
+ fd.append('Amount',amount);
+ await fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
+ ok.style.display='block';
+ ok.innerText=`✅ ID ${id} bhej diya! Galat hai to naya likh ke phir se bhej do, yahin raho ge`;
+ btn.innerText='SUBMIT ID (Phir se bhejo)';
+ // ID ka input clear nahi karenge, taaki user edit kar sake, lekin chahe to clear kar do
+ // document.getElementById('txn').value='';
 }
 </script>
 </body>
